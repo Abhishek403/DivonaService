@@ -23,7 +23,7 @@ DivonaService
 * `gradle build` - Compiles, tests and creates JAR.
 * `gradle shadow` - Creates a fat JAR with all dependencies included.
 * `gradle run` - Starts the server on the default port 30306, logs to /logs.
-* `java -jar <jar_location> server mapsys.yml` - Run standalone.
+* `java -jar <jar_location> server DivonaBackend.yml` - Run standalone.
 
 
 ###Swagger Integration
