@@ -1,0 +1,36 @@
+name: DivonaBackend
+
+hostname: localhost
+
+server:
+  adminMinThreads: 1
+  adminMaxThreads: 64
+  applicationConnectors:
+    - type: http
+      port: 30306
+  adminConnectors:
+    - type: http
+      port: 30307
+
+swagger:
+  resourcePackage: "com.reCycle.divonaservice.activity"
+
+reservationTimeout: 300
+reservationMinInterval: 3600
+
+logging:
+  loggers:
+    "com.reCycle.divonaservice": INFO
+  appenders:
+  - type: file
+    threshold: INFO
+    timeZone: IST
+    logFormat: "%highlight(%-5level) [%date] [%thread] [%cyan(%logger{0})]: %message%n"
+    currentLogFilename: ./logs/divona.log
+    archive: true
+    archivedLogFilenamePattern: ./logs/divona-%d{yyyy-MM-dd-HH}.log
+    archivedFileCount: 50
+  - type: console
+    threshold: DEBUG
+    timeZone: IST
+    logFormat: "%highlight(%-5level) [%date] [%thread] [%cyan(%logger{0})]: %message%n"

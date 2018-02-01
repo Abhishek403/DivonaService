@@ -1,0 +1,83 @@
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'eclipse'
+apply plugin: 'application'
+apply plugin: 'jacoco'
+apply plugin: 'maven'
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+configurations {
+    provided
+    testCompile.extendsFrom provided
+    compile.transitive = true
+    compile.exclude group: "org.slf4j", module: "slf4j-log4j12"
+}
+
+group = 'com.reCycle.DivonaService'
+description = 'Divona Backend'
+sourceCompatibility = 1.8
+
+dependencies {
+    compile project(':DivonaInterface')
+    compile group: 'io.dropwizard', name: 'dropwizard-core', version: '0.9.2'
+    compile group: 'com.hubspot.dropwizard', name: 'dropwizard-guice', version: '1.0.6.0'
+    compile group: 'com.smoketurner', name: 'dropwizard-swagger', version: '1.0.0-rc2-1'
+    compile group: 'org.projectlombok', name: 'lombok', version: '1.12.2'
+
+    testCompile 'junit:junit:4.11'
+}
+
+sourceSets.main.compileClasspath += configurations.provided
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.8'
+}
+
+sourceSets.main.compileClasspath += configurations.provided
+
+mainClassName = 'com.reCycle.divonaservice.DivonaApplication'
+
+run {
+    args 'server', 'DivonaBackend.yml'
+}
+
+test {
+    testLogging.showStandardStreams = true
+    useJUnit()
+    //useTestNG()
+
+    outputs.upToDateWhen { false }
+    afterTest { desc, result ->
+        println "[TEST] ${desc.className} - ${desc.name} : ${result}"
+    }
+}
+
+jar {
+    manifest {
+        attributes("Main-Class": mainClassName,
+                "Class-Path": configurations.runtime.collect { "runtime_libs/" + it.getName() }.join(' '))
+
+    }
+}
+
+jar.doLast {
+    tasks.copyToLib.execute()
+}
+
+
+task copyToLib(type: Copy) {
+    into "${jar.destinationDir}/runtime_libs"
+    from configurations.runtime
+}
+
+if (hasProperty("xlint")) {
+    tasks.withType(Compile) {
+        options.compilerArgs << "-Xlint:unchecked"
+    }
+}

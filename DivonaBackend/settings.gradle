@@ -1,0 +1,4 @@
+rootProject.name = 'com.reCycle.divonaservice'
+include ':DivonaInterface'
+project(':DivonaInterface').projectDir = new File(settingsDir, '../DivonaInterface')
+
